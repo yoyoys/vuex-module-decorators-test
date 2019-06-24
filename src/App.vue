@@ -1,20 +1,36 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <h3>userCount: {{ userCount }}</h3>
+    <button @click="testMutation">testMutation</button>
+    <button @click="testAction">testAction</button>
   </div>
 </template>
 
 <script lang="ts">
+/* eslint-disable class-methods-use-this */
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+import { getModule } from 'vuex-module-decorators';
+import { UserModule } from './store/user';
 
-@Component({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+@Component
+export default class App extends Vue {
+  get userModule() {
+    return getModule(UserModule, this.$store);
+  }
+
+  get userCount() {
+    return this.userModule.userCount;
+  }
+
+  testMutation() {
+    this.userModule.addUser(20);
+  }
+
+  testAction() {
+    this.userModule.fetchUser();
+  }
+}
 </script>
 
 <style>
